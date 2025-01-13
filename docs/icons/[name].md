@@ -10,17 +10,18 @@ sidebar: true
 <script setup>
 import { computed } from 'vue'
 import { useData } from 'vitepress'
-import IconPreview from '../.vitepress/theme/components/icons/IconPreview.vue'
-import IconPreviewSmall from '../.vitepress/theme/components/icons/IconPreviewSmall.vue'
-import IconInfo from '../.vitepress/theme/components/icons/IconInfo.vue'
-import IconContributors from '../.vitepress/theme/components/icons/IconContributors.vue'
-import RelatedIcons from '../.vitepress/theme/components/icons/RelatedIcons.vue'
-import CodeGroup from '../.vitepress/theme/components/base/CodeGroup.vue'
-import Badge from '../.vitepress/theme/components/base/Badge.vue'
-import Label from '../.vitepress/theme/components/base/Label.vue'
-import VPButton from 'vitepress/dist/client/theme-default/components/VPButton.vue';
+import IconPreview from '~/.vitepress/theme/components/icons/IconPreview.vue'
+import IconPreviewSmall from '~/.vitepress/theme/components/icons/IconPreviewSmall.vue'
+import IconInfo from '~/.vitepress/theme/components/icons/IconInfo.vue'
+import IconContributors from '~/.vitepress/theme/components/icons/IconContributors.vue'
+import IconShowcase from '~/.vitepress/theme/components/icons/IconShowcase.vue'
+import RelatedIcons from '~/.vitepress/theme/components/icons/RelatedIcons.vue'
+import CodeGroup from '~/.vitepress/theme/components/base/CodeGroup.vue'
+import Badge from '~/.vitepress/theme/components/base/Badge.vue'
+import Label from '~/.vitepress/theme/components/base/Label.vue'
 import { data } from './codeExamples.data'
-import { camelCase, startCase } from 'lodash-es'
+import { toCamelCase, toPascalCase } from '@lucide/shared'
+import { satisfies } from 'semver'
 
 const { params } = useData()
 
@@ -30,11 +31,22 @@ const tabs = computed(() => data.codeExamples?.map(
 
 const codeExample = computed(() => data.codeExamples?.map(
     (codeExample) => {
-      const pascalCase = startCase(camelCase( params.value.name)).replace(/\s/g, '')
-      return codeExample.code.replace(/PascalCase/g, pascalCase).replace(/Name/g, params.value.name)
+      const pascalCaseName = toPascalCase( params.value.name)
+      const camelCaseName = toCamelCase(params.value.name)
+
+      return codeExample.code
+        .replace(/\$(?:<[^>]+>)*PascalCase/g, pascalCaseName)
+        .replace(/\$CamelCase/g, camelCaseName)
+        .replace(/\$Name/g, params.value.name)
     }
   ).join('') ?? []
 )
+
+function releaseTagLink(version) {
+  const shouldAddV = satisfies(version, `<0.266.0`)
+
+  return `https://github.com/lucide-icons/lucide/releases/tag/${shouldAddV ? 'v' : ''}${version}`
+}
 </script>
 
 <div :class="$style.layout">
@@ -61,9 +73,7 @@ const codeExample = computed(() => data.codeExamples?.map(
         >
           <Label>Created:</Label>
           <Badge
-            :href="`https://github.com/lucide-icons/lucide/releases/tag/v${params.createdRelease.version}`"
-            target="_blank"
-            rel="noreferrer noopener"
+            :href="releaseTagLink(params.createdRelease.version)"
           >
             v{{params.createdRelease.version}}
           </Badge>
@@ -74,9 +84,7 @@ const codeExample = computed(() => data.codeExamples?.map(
         >
           <Label>Last changed:</Label>
           <Badge
-            :href="`https://github.com/lucide-icons/lucide/releases/tag/v${params.changedRelease.version}`"
-            target="_blank"
-            rel="noreferrer noopener"
+            :href="releaseTagLink(params.changedRelease.version)"
           >
             v{{params.changedRelease.version}}
           </Badge>
@@ -97,7 +105,15 @@ const codeExample = computed(() => data.codeExamples?.map(
   </div>
 </div>
 
-<RelatedIcons :icons="params.relatedIcons" />
+<IconShowcase
+  :name="params.name"
+  :iconNode="params.iconNode"
+/>
+
+<RelatedIcons
+  v-if="params.relatedIcons"
+  :icons="params.relatedIcons"
+/>
 
 <style module>
   .preview {
@@ -222,4 +238,13 @@ const codeExample = computed(() => data.codeExamples?.map(
       margin-bottom: 8px;
     }
   }
+</style>
+
+<style>
+section h2.title {
+  text-align: center;
+  font-weight: 500;
+  margin-block-end: 64px;
+  padding-top: 32px;
+}
 </style>
