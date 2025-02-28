@@ -18,13 +18,17 @@ yarn add lucide-react
 npm install lucide-react
 ```
 
+```sh [bun]
+bun add lucide-react
+```
+
 :::
 
 ## How to use
 
-It's build with ES Modules so it's completely tree-shakable.
+Lucide is built with ES Modules, so it's completely tree-shakable.
 
-Each icon can be imported as a React component, what renders a inline SVG Element. This way only the icons that are imported into your project are included in the final bundle. The rest of the icons are tree-shaken away.
+Each icon can be imported as a React component, which renders an inline SVG element. This way, only the icons that are imported into your project are included in the final bundle. The rest of the icons are tree-shaken away.
 
 ### Example
 
@@ -52,7 +56,7 @@ export default App;
 
 ### Applying props
 
-To apply custom props to change the look of the icon, this can be done by simply pass them as props to the component. All SVG attributes are available as props to style the SVGs. See the list of SVG Presentation Attributes on [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation).
+To customize the appearance of an icon, you can pass custom properties as props directly to the component. The component accepts all SVG attributes as props, which allows flexible styling of the SVG elements. See the list of SVG Presentation Attributes on [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation).
 
 ```jsx
 // Usage
@@ -61,36 +65,41 @@ const App = () => {
 };
 ```
 
-## One generic icon component
+## With Lucide lab or custom icons
 
-It is possible to create one generic icon component to load icons. It's not recommended.
+[Lucide lab](https://github.com/lucide-icons/lucide-lab) is a collection of icons that are not part of the Lucide main library.
 
-::: danger
-Example below importing all ES Modules, caution using this example. All icons will be imported. When using bundlers like: `Webpack`, `Rollup` or `Vite` the application build size will grow strongly and harming the performance the application.
-:::
+They can be used by using the `Icon` component.
+All props like regular lucide icons can be passed to adjust the icon appearance.
 
-### Icon Component Example
+### Using the `Icon` component
+
+This creates a single icon based on the iconNode passed and renders a Lucide icon component.
 
 ```jsx
-import { icons } from 'lucide-react';
+import { Icon } from 'lucide-react';
+import { burger } from '@lucide/lab';
 
-const Icon = ({ name, color, size }) => {
-  const LucideIcon = icons[name];
-
-  return <LucideIcon color={color} size={size} />;
-};
-
-export default Icon;
+const App = () => (
+  <Icon iconNode={burger} />
+);
 ```
 
-#### Using the Icon Component
+## Dynamic Icon Component
+
+It is possible to create one generic icon component to load icons, but it is not recommended.
+Since it is importing all icons during build. This increases build time and the different modules it will create.
+
+`DynamicIcon` is useful for applications that want to show icons dynamically by icon name. For example, when using a content management system with where icon names are stored in a database.
+
+For static use cases, it is recommended to import the icons directly.
+
+The same props can be passed to adjust the icon appearance. The `name` prop is required to load the correct icon.
 
 ```jsx
-import Icon from './Icon';
+import { DynamicIcon } from 'lucide-react/dynamic';
 
-const App = () => {
-  return <Icon name="home" />;
-};
-
-export default App;
+const App = () => (
+  <DynamicIcon name="camera" color="red" size={48} />
+);
 ```
