@@ -12,10 +12,10 @@
     "meter",
     "speed",
     "pressure",
-    "measure"
+    "measure",
+    "level"
   ],
   "categories": [
-    "account",
     "transportation",
     "sports",
     "science"
