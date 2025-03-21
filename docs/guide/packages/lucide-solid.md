@@ -18,13 +18,17 @@ yarn add lucide-solid
 npm install lucide-solid
 ```
 
+```sh [bun]
+bun add lucide-solid
+```
+
 :::
 
 ## How to use
 
-It's build with ES Modules so it's completely tree-shakable.
+Lucide is built with ES Modules, so it's completely tree-shakable.
 
-Each icon can be imported as a Solid component, what renders a inline SVG Element. This way only the icons that are imported into your project are included in the final bundle. The rest of the icons are tree-shaken away.
+Each icon can be imported as a Solid component, which renders an inline SVG element. This way, only the icons that are imported into your project are included in the final bundle. The rest of the icons are tree-shaken away.
 
 ### Example
 
@@ -32,6 +36,19 @@ Additional props can be passed to adjust the icon:
 
 ```jsx
 import { Camera } from 'lucide-solid';
+
+// Usage
+const App = () => {
+  return <Camera color="red" size={48} />;
+};
+
+export default App;
+```
+
+Vite loading/performing issues with the dev server can be resolved by import icons directly from the `lucide-solid/icons` directory:
+
+```jsx
+import Camera from 'lucide-solid/icons/camera';
 
 // Usage
 const App = () => {
@@ -52,7 +69,7 @@ export default App;
 
 ### Applying props
 
-To apply custom props to change the look of the icon, this can be done by simply pass them as props to the component. All SVG attributes are available as props to style the SVGs. See the list of SVG Presentation Attributes on [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation).
+To customize the appearance of an icon, you can pass custom properties as props directly to the component. The component accepts all SVG attributes as props, which allows flexible styling of the SVG elements. See the list of SVG Presentation Attributes on [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation).
 
 ```jsx
 // Usage
@@ -61,12 +78,32 @@ const App = () => {
 };
 ```
 
+## With Lucide lab or custom icons
+
+[Lucide lab](https://github.com/lucide-icons/lucide-lab) is a collection of icons that are not part of the Lucide main library.
+
+They can be used by using the `Icon` component.
+All props like the regular Lucide icons can be passed to adjust the icon appearance.
+
+### Using the `Icon` component
+
+This creates a single icon based on the iconNode passed and renders a Lucide icon component.
+
+```jsx
+import { Icon } from 'lucide-solid';
+import { burger, sausage } from '@lucide/lab';
+
+const App = () => (
+  <Icon iconNode={sausage} color="red"/>
+);
+```
+
 ## One generic icon component
 
 It is possible to create one generic icon component to load icons. It's not recommended.
 
 ::: danger
-Example below importing all ES Modules, caution using this example. All icons will be imported. When using bundlers like: `Webpack`, `Rollup` or `Vite` the application build size will grow strongly and harming the performance the application.
+The example below imports all ES Modules, so exercise caution when using it. Importing all icons will significantly increase the build size of the application, negatively affecting its performance. This is especially important  to keep in mind when using bundlers like `Webpack`, `Rollup`, or `Vite`.
 :::
 
 ### Icon Component Example

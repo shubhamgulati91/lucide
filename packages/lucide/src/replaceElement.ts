@@ -1,7 +1,8 @@
 import createElement from './createElement';
+import defaultAttributes from './defaultAttributes';
 import { Icons } from './types';
 
-export type CustomAttrs = { [attr:string]: any }
+export type CustomAttrs = { [attr: string]: any };
 
 /**
  * Get the attributes of an HTML element.
@@ -19,7 +20,9 @@ export const getAttrs = (element: Element): Record<string, string> =>
  * @param {Object} attrs
  * @returns {Array}
  */
-export const getClassNames = (attrs: Record<string, string> | string): string | string[] => {
+export const getClassNames = (
+  attrs: Record<string, string | string[]> | string,
+): string | string[] => {
   if (typeof attrs === 'string') return attrs;
   if (!attrs || !attrs.class) return '';
   if (attrs.class && typeof attrs.class === 'string') {
@@ -37,7 +40,7 @@ export const getClassNames = (attrs: Record<string, string> | string): string | 
  * @returns {string}
  */
 export const combineClassNames = (
-  arrayOfClassnames: (string | Record<string, string>)[]
+  arrayOfClassnames: (string | Record<string, string | string[]>)[],
 ) => {
   const classNameArray = arrayOfClassnames.flatMap(getClassNames);
 
@@ -52,9 +55,9 @@ const toPascalCase = (string: string): string =>
   string.replace(/(\w)(\w*)(_|-|\s*)/g, (g0, g1, g2) => g1.toUpperCase() + g2.toLowerCase());
 
 interface ReplaceElementOptions {
-  nameAttr: string
-  icons: Icons,
-  attrs: Record<string, string>
+  nameAttr: string;
+  icons: Icons;
+  attrs: Record<string, string>;
 }
 
 /**
@@ -66,7 +69,7 @@ interface ReplaceElementOptions {
 const replaceElement = (element: Element, { nameAttr, icons, attrs }: ReplaceElementOptions) => {
   const iconName = element.getAttribute(nameAttr);
 
-  if(iconName == null) return
+  if (iconName == null) return;
 
   const ComponentName = toPascalCase(iconName);
 
@@ -79,10 +82,9 @@ const replaceElement = (element: Element, { nameAttr, icons, attrs }: ReplaceEle
   }
 
   const elementAttrs = getAttrs(element);
-  const [tag, iconAttributes, children] = iconNode;
 
   const iconAttrs = {
-    ...iconAttributes,
+    ...defaultAttributes,
     'data-lucide': iconName,
     ...attrs,
     ...elementAttrs,
@@ -92,13 +94,13 @@ const replaceElement = (element: Element, { nameAttr, icons, attrs }: ReplaceEle
 
   if (classNames) {
     Object.assign(iconAttrs, {
-      class: classNames
-    })
+      class: classNames,
+    });
   }
 
-  const svgElement = createElement([tag, iconAttrs, children]);
+  const svgElement = createElement(iconNode, iconAttrs);
 
   return element.parentNode?.replaceChild(svgElement, element);
 };
 
-export default replaceElement
+export default replaceElement;

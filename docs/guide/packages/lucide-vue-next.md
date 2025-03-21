@@ -2,12 +2,6 @@
 
 Implementation of the lucide icon library for Vue 3 applications.
 
-## Vue 3 or Vue 2
-
-::: tip
-This version of lucide is for Vue 3, For Vue 2 got to [lucide-vue ->](lucide-vue)
-:::
-
 ## Installation
 
 ::: code-group
@@ -24,29 +18,33 @@ yarn add lucide-vue-next
 npm install lucide-vue-next
 ```
 
+```sh [bun]
+bun add lucide-vue-next
+```
+
 :::
 
 ## How to use
 
-It's build with ES Modules so it's completely tree-shakable.
+Lucide is built with ES Modules, so it's completely tree-shakable.
 
-Each icon can be imported as a Vue component, what renders a inline SVG Element. This way only the icons that are imported into your project are included in the final bundle. The rest of the icons are tree-shaken away.
+Each icon can be imported as a Vue component, which renders an inline SVG Element. This way only the icons that are imported into your project are included in the final bundle. The rest of the icons are tree-shaken away.
 
 ### Example
 
 You can pass additional props to adjust the icon.
 
 ```vue
+<script setup>
+import { Camera } from 'lucide-vue-next';
+</script>
+
 <template>
   <Camera
     color="red"
     :size="32"
   />
 </template>
-
-<script setup>
-import { Camera } from 'lucide-vue-next';
-</script>
 ```
 
 ## Props
@@ -61,7 +59,7 @@ import { Camera } from 'lucide-vue-next';
 
 ### Applying props
 
-To apply custom props to change the look of the icon, this can be done by simply pass them as props to the component. All SVG attributes are available as props to style the SVGs. See the list of SVG Presentation Attributes on [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation).
+To customize the appearance of an icon, you can pass custom properties as props directly to the component. The component accepts all SVG attributes as props, which allows flexible styling of the SVG elements. See the list of SVG Presentation Attributes on [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation).
 
 ```vue
 <template>
@@ -69,12 +67,34 @@ To apply custom props to change the look of the icon, this can be done by simply
 </template>
 ```
 
+## With Lucide lab or custom icons
+
+[Lucide lab](https://github.com/lucide-icons/lucide-lab) is a collection of icons that are not part of the Lucide main library.
+
+They can be used by using the `Icon` component.
+All props like regular lucide icons can be passed to adjust the icon appearance.
+
+### Using the `Icon` component
+
+This creates a single icon based on the iconNode passed and renders a Lucide icon component.
+
+```vue
+<script setup>
+import { Icon } from 'lucide-vue-next';
+import { burger } from '@lucide/lab';
+</script>
+
+<template>
+  <Icon :iconNode="burger" />
+</template>
+```
+
 ## One generic icon component
 
-It is possible to create one generic icon component to load icons. It's not recommended.
+It is possible to create one generic icon component to load icons, but it is not recommended.
 
 ::: danger
-Example below importing all ES Modules, caution using this example. All icons will be imported. When using bundlers like: `Webpack`, `Rollup` or `Vite` the application build size will grow strongly and harming the performance the application.
+The example below imports all ES Modules, so exercise caution when using it. Importing all icons will significantly increase the build size of the application, negatively affecting its performance. This is especially important when using bundlers like `Webpack`, `Rollup`, or `Vite`.
 :::
 
 ### Icon Component Example
